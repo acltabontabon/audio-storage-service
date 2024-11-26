@@ -28,6 +28,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    implementation 'com.github.kokorin.jaffree:jaffree:2024.08.29'
+    implementation 'org.liquibase:liquibase-core'
+
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'

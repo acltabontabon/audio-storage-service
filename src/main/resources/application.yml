@@ -1,12 +1,17 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
   application:
     name: audio-storage-service
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
@@ -20,3 +25,6 @@ spring:
 logging:
   level:
     com.acltabontabon: INFO
+
+server:
+  port: 80
