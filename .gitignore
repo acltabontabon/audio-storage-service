@@ -37,3 +37,4 @@ out/
 .vscode/
 
 audio_files/
+audio_download_cache/

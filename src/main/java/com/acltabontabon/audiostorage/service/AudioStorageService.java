@@ -1,5 +1,6 @@
 package com.acltabontabon.audiostorage.service;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -12,13 +13,13 @@ public interface AudioStorageService {
 
     void uploadAudio(MultipartFile audioFile, Long userId, Long phraseId);
 
-    void downloadAudio();
+    File downloadAudio(Long userId, Long phraseId, String audioFormat);
 
     default String generateFilename(String ext) {
         return String.format("AudioFile_%s_%d.%s", LocalDate.now(), System.currentTimeMillis(), ext);
     }
 
-    default boolean hasValidExtension(String filename) {
+    default boolean isFormatSupported(String filename) {
         if (filename == null || !filename.contains(".")) {
             return false;
         }

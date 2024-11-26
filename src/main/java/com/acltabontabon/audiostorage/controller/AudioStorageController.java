@@ -2,9 +2,13 @@ package com.acltabontabon.audiostorage.controller;
 
 import com.acltabontabon.audiostorage.dto.ApiResponse;
 import com.acltabontabon.audiostorage.service.AudioStorageService;
+import java.io.File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,9 +44,18 @@ public class AudioStorageController {
     }
 
     @GetMapping("/{userId}/phrase/{phraseId}/{audioFormat}")
-    public void download(@PathVariable String userId,
-                         @PathVariable String phraseId,
+    public ResponseEntity<Resource> download(@PathVariable Long userId,
+                         @PathVariable Long phraseId,
                          @PathVariable String audioFormat) {
 
+        log.info("Downloading audio file for user: {}, phrase: {}", userId, phraseId);
+        File audioFile = audioStorageService.downloadAudio(userId, phraseId, audioFormat);
+        Resource resource = new FileSystemResource(audioFile);
+
+        // Return the file as a response
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType("audio/mp4"))
+            .header("Content-Disposition", "attachment; filename=\"" + audioFile.getName() + "\"")
+            .body(resource);
     }
 }

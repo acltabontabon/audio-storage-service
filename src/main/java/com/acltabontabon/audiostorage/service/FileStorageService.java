@@ -13,11 +13,11 @@ import com.acltabontabon.audiostorage.repository.PhraseRepository;
 import com.acltabontabon.audiostorage.repository.UserPhraseAudioRepository;
 import com.acltabontabon.audiostorage.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -35,27 +35,21 @@ public class FileStorageService implements AudioStorageService {
     @Override
     @Transactional
     public void uploadAudio(MultipartFile audioFile, Long userId, Long phraseId) {
-        if (!hasValidExtension(audioFile.getOriginalFilename())) {
+        if (!isFormatSupported(audioFile.getOriginalFilename())) {
             throw new UnsupportedFileExtensionException("Invalid audio file extension! Supported: " + ALLOWED_EXTENSIONS);
-        }
-
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException("User with id " + userId + " not found");
-        }
-
-        if (!phraseRepository.existsById(phraseId)) {
-            throw new PhraseNotFoundException("Phrase with id " + phraseId + " not found");
         }
 
         if (userPhraseAudioRepository.existsById(new UserPhraseAudioId(userId, phraseId))) {
             throw new AudioAlreadyExistException("Audio already exists for this user and phrase");
         }
 
-        try {
-            AudioFile persistedAudioFile = saveAudioDetailsToDB(userId, phraseId);
+        validate(userId, phraseId);
 
-            // TODO: make this non-blocking!
-            audioConverterService.saveAsWav(audioFile, persistedAudioFile.getStoragePath());
+        try {
+            AudioFile persistedAudioFile = saveAudioDetails(userId, phraseId);
+
+            // TODO: make this non-blocking?
+            audioConverterService.toWAV(audioFile, persistedAudioFile.getStoragePath());
         } catch (Exception e) {
             log.error("Failed to convert audio file", e);
             // rollback transaction
@@ -64,11 +58,47 @@ public class FileStorageService implements AudioStorageService {
     }
 
     @Override
-    public void downloadAudio() {
+    public File downloadAudio(Long userId, Long phraseId, String audioFormat) {
+        validate(userId, phraseId);
 
+        UserPhraseAudio userPhraseAudio = userPhraseAudioRepository
+            .findById(new UserPhraseAudioId(userId, phraseId))
+            .orElseThrow(() -> new RuntimeException("Audio does not exist for userId: " + userId + ", phraseId: " + phraseId));
+
+        try {
+            // Convert the audio file to the desired format
+            return audioConverterService.toM4A(new File(userPhraseAudio.getAudioFile().getStoragePath()));
+        } catch (Exception e) {
+            log.error("Failed to convert audio file for userId: {}, phraseId: {}", userId, phraseId, e);
+            throw new FileConversionException("Failed to convert audio file");
+        }
     }
 
-    private AudioFile saveAudioDetailsToDB(Long userId, Long phraseId) {
+    /**
+     * Validates if the user and phrase exists and if the audio already exists for the user
+     * and phrase.
+     *
+     * @param userId -
+     * @param phraseId -
+     */
+    private void validate(Long userId, Long phraseId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException("User with id " + userId + " not found");
+        }
+
+        if (!phraseRepository.existsById(phraseId)) {
+            throw new PhraseNotFoundException("Phrase with id " + phraseId + " not found");
+        }
+    }
+
+    /**
+     * Saves the audio details to the database.
+     *
+     * @param userId -
+     * @param phraseId -
+     * @return audio file
+     */
+    private AudioFile saveAudioDetails(Long userId, Long phraseId) {
         String filename = generateFilename(getTargetAudioFormat());
         AudioFile persistedAudioFile = audioFileRepository.save(AudioFile.builder()
             .filename(filename)
