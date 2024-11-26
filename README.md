@@ -10,6 +10,10 @@ Audio Storage Service is a RESTful web service that allows users to upload and d
 - Java 17
 - Running Docker
 - Internet Connection
+- FFmpeg
+  - For Mac: `brew install ffmpeg`
+  - For Ubuntu: `sudo apt-get install ffmpeg`
+  - For Windows: [Download FFmpeg](https://ffmpeg.org/download.html)
 
 ### Running the Application
 
