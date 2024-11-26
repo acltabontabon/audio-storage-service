@@ -29,6 +29,8 @@ Audio Storage Service is a RESTful web service that allows users to upload and d
 ### Using the Application
 
 #### Test Data
+> **NOTE**: `test-files` directory contains sample audio file and postman collection for testing the application.
+
 
 | User ID | Phrase ID |
 |---------|-----------|
@@ -37,12 +39,15 @@ Audio Storage Service is a RESTful web service that allows users to upload and d
 | 2       | 1         |
 | 2       | 2         |
 
+
 #### Upload an audio file:
+>**NOTE**: Uploaded audio files will be stored in the `./audio-storage` directory.
 ```bash
  curl --request POST 'http://localhost/audio/user/<USER_ID>/phrase/<PHRASE_ID>' --form 'audio_file=@"./test_audio_file_1.m4a"'
 ```
 
 #### Get an audio file:
+>**NOTE**: This caches the audio file in the `./audio-download-cache` directory. Audio conversion will be skipped if the file is already cached.
 ```bash
  curl --request GET 'http://localhost/audio/user/<USER_ID>/phrase/<PHRASE_ID>/m4a' -o './test_audio_file_1.m4a'
 ```

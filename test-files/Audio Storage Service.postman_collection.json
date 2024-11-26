@@ -1,0 +1,297 @@
+{
+	"info": {
+		"_postman_id": "f062dc18-d50e-4b08-9b13-139f2b8c6b12",
+		"name": "Audio Storage Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1599204"
+	},
+	"item": [
+		{
+			"name": "Retrieval - Successful Audio File Retrieval",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/audio/user/1/phrase/1/m4a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"1",
+						"phrase",
+						"1",
+						"m4a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieval - Unsupported audio format",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/audio/user/1/phrase/1/m4b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"1",
+						"phrase",
+						"1",
+						"m4b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieval - Phrase ID Not Found",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/audio/user/1/phrase/3/m4a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"1",
+						"phrase",
+						"3",
+						"m4a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieval - User ID Not Found",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/audio/user/4/phrase/1/m4a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"4",
+						"phrase",
+						"1",
+						"m4a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload - Successful Audio Upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio_file",
+							"type": "file",
+							"src": "/Users/aclt/Downloads/sample.m4a"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/audio/user/1/phrase/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"1",
+						"phrase",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload - Phrase ID Not Found",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio_file",
+							"type": "file",
+							"src": "/Users/aclt/Downloads/sample.m4a"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/audio/user/2/phrase/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"2",
+						"phrase",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload - User ID Not Found",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio_file",
+							"type": "file",
+							"src": [
+								"/Users/aclt/Downloads/sample.m4a",
+								"/Users/aclt/Downloads/sample.m4a"
+							]
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/audio/user/5/phrase/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"5",
+						"phrase",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload - Audio file already exist ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio_file",
+							"type": "file",
+							"src": "/Users/aclt/Downloads/sample.m4a"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/audio/user/1/phrase/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"1",
+						"phrase",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload - Invalid Form Data Key",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio_files",
+							"type": "file",
+							"src": "/Users/aclt/Downloads/sample.m4a"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/audio/user/1/phrase/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"1",
+						"phrase",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload - Empty audio file",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "audio_file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/audio/user/1/phrase/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"audio",
+						"user",
+						"1",
+						"phrase",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
