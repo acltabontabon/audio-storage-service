@@ -28,12 +28,21 @@ Audio Storage Service is a RESTful web service that allows users to upload and d
 
 ### Using the Application
 
-A. Upload an audio file:
+#### Test Data
+
+| User ID | Phrase ID |
+|---------|-----------|
+| 1       | 1         |
+| 1       | 2         |
+| 2       | 1         |
+| 2       | 2         |
+
+#### Upload an audio file:
 ```bash
  curl --request POST 'http://localhost/audio/user/<USER_ID>/phrase/<PHRASE_ID>' --form 'audio_file=@"./test_audio_file_1.m4a"'
 ```
 
-B. Get an audio file:
+#### Get an audio file:
 ```bash
  curl --request GET 'http://localhost/audio/user/<USER_ID>/phrase/<PHRASE_ID>/m4a' -o './test_audio_file_1.m4a'
 ```

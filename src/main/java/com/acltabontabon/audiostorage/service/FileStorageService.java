@@ -1,6 +1,7 @@
 package com.acltabontabon.audiostorage.service;
 
 import com.acltabontabon.audiostorage.exception.AudioAlreadyExistException;
+import com.acltabontabon.audiostorage.exception.AudioNotFoundException;
 import com.acltabontabon.audiostorage.exception.FileConversionException;
 import com.acltabontabon.audiostorage.exception.PhraseNotFoundException;
 import com.acltabontabon.audiostorage.exception.UnsupportedFileExtensionException;
@@ -14,7 +15,6 @@ import com.acltabontabon.audiostorage.repository.UserPhraseAudioRepository;
 import com.acltabontabon.audiostorage.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.io.File;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class FileStorageService implements AudioStorageService {
     @Override
     @Transactional
     public void uploadAudio(MultipartFile audioFile, Long userId, Long phraseId) {
-        if (!isFormatSupported(audioFile.getOriginalFilename())) {
+        if (!isFileSupported(audioFile.getOriginalFilename())) {
             throw new UnsupportedFileExtensionException("Invalid audio file extension! Supported: " + ALLOWED_EXTENSIONS);
         }
 
@@ -59,11 +59,15 @@ public class FileStorageService implements AudioStorageService {
 
     @Override
     public File downloadAudio(Long userId, Long phraseId, String audioFormat) {
+        if (!isFileTypeSupported(audioFormat)) {
+            throw new UnsupportedFileExtensionException("Invalid audio file extension! Supported: " + ALLOWED_EXTENSIONS);
+        }
+
         validate(userId, phraseId);
 
         UserPhraseAudio userPhraseAudio = userPhraseAudioRepository
             .findById(new UserPhraseAudioId(userId, phraseId))
-            .orElseThrow(() -> new RuntimeException("Audio does not exist for userId: " + userId + ", phraseId: " + phraseId));
+            .orElseThrow(() -> new AudioNotFoundException("Audio does not exist for userId: " + userId + ", phraseId: " + phraseId));
 
         try {
             // Convert the audio file to the desired format
@@ -83,10 +87,12 @@ public class FileStorageService implements AudioStorageService {
      */
     private void validate(Long userId, Long phraseId) {
         if (!userRepository.existsById(userId)) {
+            log.error("User with id " + userId + " not found");
             throw new UserNotFoundException("User with id " + userId + " not found");
         }
 
         if (!phraseRepository.existsById(phraseId)) {
+            log.error("Phrase with id " + phraseId + " not found");
             throw new PhraseNotFoundException("Phrase with id " + phraseId + " not found");
         }
     }

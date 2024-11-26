@@ -33,6 +33,13 @@ public class GlobalExceptionHandler {
             .build());
     }
 
+    @ExceptionHandler(AudioNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleAudioNotFoundException(AudioNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.builder()
+            .message(ex.getMessage())
+            .build());
+    }
+
     @ExceptionHandler(PhraseNotFoundException.class)
     public ResponseEntity<ApiResponse> handlePhraseNotFoundException(PhraseNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.builder()

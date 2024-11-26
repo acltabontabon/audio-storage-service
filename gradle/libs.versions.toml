@@ -1,5 +1,5 @@
 [versions]
-spring_boot = "3.4.0"
+spring_boot = "3.3.0"
 spring_boot_dependency_mgmt = "1.1.6"
 
 [plugins]

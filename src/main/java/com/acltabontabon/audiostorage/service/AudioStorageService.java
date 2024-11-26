@@ -19,13 +19,17 @@ public interface AudioStorageService {
         return String.format("AudioFile_%s_%d.%s", LocalDate.now(), System.currentTimeMillis(), ext);
     }
 
-    default boolean isFormatSupported(String filename) {
+    default boolean isFileSupported(String filename) {
         if (filename == null || !filename.contains(".")) {
             return false;
         }
 
         String extension = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
-        return ALLOWED_EXTENSIONS.contains(extension);
+        return isFileTypeSupported(extension);
+    }
+
+    default boolean isFileTypeSupported(String fileType) {
+        return ALLOWED_EXTENSIONS.contains(fileType);
     }
 
     default String getTargetAudioFormat() {
