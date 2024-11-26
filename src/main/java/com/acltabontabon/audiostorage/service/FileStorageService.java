@@ -47,6 +47,7 @@ public class FileStorageService implements AudioStorageService {
 
         try {
             AudioFile persistedAudioFile = saveAudioDetails(userId, phraseId);
+            log.info("Uploading audio file: {}", audioFile.getOriginalFilename());
 
             // TODO: make this non-blocking?
             audioConverterService.toWAV(audioFile, persistedAudioFile.getStoragePath());
@@ -79,9 +80,7 @@ public class FileStorageService implements AudioStorageService {
     }
 
     /**
-     * Validates if the user and phrase exists and if the audio already exists for the user
-     * and phrase.
-     *
+     * Validates the existence of the user and phrase.
      * @param userId -
      * @param phraseId -
      */

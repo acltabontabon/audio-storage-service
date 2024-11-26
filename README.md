@@ -62,3 +62,7 @@ Audio Storage Service is a RESTful web service that allows users to upload and d
 
 ### Deployment Landscape
 ![Alt text for image](./diagrams/d_deployment-landscape.png)
+
+## Next Steps
+- Add more unit tests
+- Implement non-blocking file upload

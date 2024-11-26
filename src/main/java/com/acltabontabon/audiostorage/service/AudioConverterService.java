@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AudioConverterService {
 
     public void toWAV(MultipartFile audioFile, String outputPath) throws IOException {
+        log.debug("Converting audio file to WAV: {}", audioFile.getOriginalFilename());
         File audioTmpFile = File.createTempFile("audio_", ".m4a");
         audioFile.transferTo(audioTmpFile);
 
@@ -31,6 +32,7 @@ public class AudioConverterService {
     }
 
     public File toM4A(File srcAudioFile) {
+        log.debug("Converting audio file to M4A: {}", srcAudioFile.getName());
         File outputFile = new File("audio_download_cache", fileNameWithoutExtension(srcAudioFile.getName()) + ".m4a");
 
         // skip conversion and use cached file if it exists
