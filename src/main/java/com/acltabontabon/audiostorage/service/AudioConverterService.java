@@ -15,19 +15,19 @@ public class AudioConverterService {
 
     public void toWAV(MultipartFile audioFile, String outputPath) throws IOException {
         log.debug("Converting audio file to WAV: {}", audioFile.getOriginalFilename());
-        File audioTmpFile = File.createTempFile("audio_", ".m4a");
-        audioFile.transferTo(audioTmpFile);
+        File srcTempFile = File.createTempFile("audio_", ".m4a");
+        audioFile.transferTo(srcTempFile);
 
         File outputFile = new File(outputPath);
         outputFile.getParentFile().mkdirs();
 
         try {
             FFmpeg.atPath()
-                .addInput(UrlInput.fromPath(audioTmpFile.toPath()))
+                .addInput(UrlInput.fromPath(srcTempFile.toPath()))
                 .addOutput(UrlOutput.toPath(outputFile.toPath()))
                 .execute();
         } finally {
-            audioTmpFile.delete();
+            srcTempFile.delete();
         }
     }
 

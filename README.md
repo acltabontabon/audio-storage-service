@@ -66,3 +66,4 @@ Audio Storage Service is a RESTful web service that allows users to upload and d
 ## Next Steps
 - Add more unit tests
 - Implement non-blocking file upload
+- OpenAPI first approach (for easier backwards compatibility checking)
